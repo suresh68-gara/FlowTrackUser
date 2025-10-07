@@ -1,99 +1,6 @@
 
 
 
-// import React, { useEffect, useRef, useState } from "react";
-// import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
-// import gantt from "dhtmlx-gantt";
-// import { useProjects } from "../../context/ProjectContext";
-
-// const Timeline = () => {
-//   const ganttContainer = useRef(null);
-//   const { projects, addProject } = useProjects();
-//   const [newProjectText, setNewProjectText] = useState("");
-
-//   useEffect(() => {
-//     gantt.config.xml_date = "%Y-%m-%d %H:%i";
-//     gantt.config.readonly = false;
-//     gantt.config.drag_move = true;
-//     gantt.config.drag_resize = true;
-//     gantt.config.drag_links = true;
-//     gantt.config.auto_scheduling = true;
-//     gantt.config.show_errors = false;
-//     gantt.config.highlight_critical_path = true;
-
-//     gantt.init(ganttContainer.current);
-
-//     gantt.clearAll();
-//     gantt.parse({
-//       data: projects,
-//       links: [
-//         { id: 1, source: 1, target: 2, type: "0" },
-//         { id: 2, source: 2, target: 3, type: "0" },
-//         { id: 3, source: 3, target: 4, type: "0" },
-//         { id: 4, source: 4, target: 5, type: "0" },
-//       ],
-//     });
-//   }, [projects]);
-
-//   const handleCreateProject = () => {
-//     if (!newProjectText.trim()) return;
-//     const newProject = {
-//       id: Date.now(),
-//       text: newProjectText,
-//       start_date: "2025-12-10 00:00",
-//       duration: 10,
-//       progress: 0,
-//     };
-//     addProject(newProject);
-//     setNewProjectText("");
-//   };
-
-//   const containerStyle = {
-//     margin: "30px auto",
-//     maxWidth: "1200px",
-//     borderRadius: "12px",
-//     boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-//     overflow: "hidden",
-//     backgroundColor: "#fff",
-//     fontFamily: "Segoe UI, sans-serif",
-//   };
-
-//   const headerStyle = {
-//     padding: "20px",
-//     background: "linear-gradient(to right, #4e54c8, #8f94fb)",
-//     color: "#fff",
-//     fontSize: "24px",
-//     fontWeight: "600",
-//     textAlign: "center",
-//     letterSpacing: "0.5px",
-//   };
-
-//   const ganttStyle = {
-//     height: "600px",
-//     width: "100%",
-//   };
-
-//   return (
-//     <div style={containerStyle}>
-//       <div style={headerStyle}>📅 Project Timeline</div>
-//       <div style={{ padding: "20px", display: "flex", gap: "10px" }}>
-//         <input
-//           type="text"
-//           value={newProjectText}
-//           onChange={(e) => setNewProjectText(e.target.value)}
-//           placeholder="New project name"
-//           style={{ flex: 1, padding: "8px", fontSize: "16px" }}
-//         />
-//         <button onClick={handleCreateProject} style={{ padding: "8px 16px" }}>
-//           Add Project
-//         </button>
-//       </div>
-//       <div ref={ganttContainer} style={ganttStyle}></div>
-//     </div>
-//   );
-// };
-
-// export default Timeline;
 
 
 
@@ -101,6 +8,13 @@
 
 
 
+
+
+
+
+
+
+// for UI/UX  ok 
 
 import React, { useEffect, useRef, useState } from "react";
 import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
@@ -192,7 +106,7 @@ const Timeline = () => {
     borderRadius: "16px",
     boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
     overflow: "hidden",
-    background: "linear-gradient(145deg, #f0f0f0, #ffffff)",
+    background: "#D0F0F4",
     fontFamily: "Segoe UI, sans-serif",
     transform: "perspective(1000px)",
     transition: "transform 0.3s ease-in-out",
@@ -241,7 +155,7 @@ const Timeline = () => {
     padding: isMobile ? "10px 16px" : "12px 20px",
     fontSize: isMobile ? "14px" : "16px",
     borderRadius: "8px",
-    background: "linear-gradient(to right, #ff512f, #dd2476)",
+    background: "#8c6deaff",
     color: "#fff",
     border: "none",
     cursor: "pointer",
