@@ -2,6 +2,12 @@
 
 
 
+
+// full code ok  . 
+
+
+
+
 // import React, { useEffect, useState, useRef } from 'react';
 // import { useParams } from 'react-router-dom';
 // import { FiUpload } from 'react-icons/fi'; // Add this line
@@ -131,7 +137,7 @@
 //   const [isMobile, setIsMobile] = useState(false);
 //   const [activeSwimlane, setActiveSwimlane] = useState(null);
 
-//     // State to store selected profile file
+//   // State to store selected profile file
 //   const [profileFile, setProfileFile] = useState(null);
 
 //   // Handler for file input changes
@@ -513,9 +519,28 @@
 //   };
 
 //   return (
-//     <div className="board-wrap">
+//     <div
+//       className="board-wrap"
+//       style={{
+//         margin: 0,
+//         padding: 0,
+//         maxWidth: '100vw',
+//         minHeight: '100vh',
+//         background: '#19a0f7', // makes Kanban flush with browser edge
+//         overflowX: 'auto'
+//       }}
+//     >
 //       {/* Project Name Header */}
-//       <div className="project-header">
+//       <div
+//         className="project-header"
+//         style={{
+//           background: '#dbeafe',
+//           borderRadius: 8,
+//           padding: '20px 0px', // zero left/right
+//           margin: 0,
+//           marginBottom: 20,
+//         }}
+//       >
 //         <h1 className="project-title">{projectName}</h1>
 //         <div className="project-stats">
 //           <span className="project-stat">{epics.length} Epics</span>
@@ -767,6 +792,8 @@
 //                           <option>Low</option>
 //                           <option>Medium</option>
 //                           <option>High</option>
+//                            <option>Critical</option>
+
 //                         </select>
 //                       </div>
 //                       <div className="modal-field">
@@ -1714,7 +1741,7 @@
 //     .modal-overlay {
 //       padding: 10px;
 //     }
-
+    
 //     .modal-container.mobile-modal-container {
 //       width: 100%;
 //       height: 100%;
@@ -1935,8 +1962,19 @@
 
 
 
-// for remove the  gap ok . 
 
+
+
+
+
+
+
+
+
+
+
+
+// for updates 
 
 
 
@@ -1991,7 +2029,7 @@ const mockIssues = [
   }
 ];
 
-const defaultStatuses = ['backlog', 'todo', 'analysis', 'inprogress', 'blocked', 'code review', 'qa', 'milestone', 'done'];
+const defaultStatuses = ['backlog', 'todo', 'inprogress', 'code review','done'];
 const mockEpics = [{ id: 'p1', name: 'Frontend' }, { id: 'p2', name: 'Middleware' }];
 const mockProjects = [
   { id: 'p1', name: 'E-Commerce Platform' },
@@ -2724,6 +2762,8 @@ export default function KanbanBoard() {
                           <option>Low</option>
                           <option>Medium</option>
                           <option>High</option>
+                           <option>Critical</option>
+
                         </select>
                       </div>
                       <div className="modal-field">
