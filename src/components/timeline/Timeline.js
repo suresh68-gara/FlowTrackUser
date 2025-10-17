@@ -2,206 +2,323 @@
 
 
 
+// based on figma ok 
 
 
 
 
+import React, { useState } from "react";
 
-
-
-
-
-
-
-
-// for UI/UX  ok 
-
-import React, { useEffect, useRef, useState } from "react";
-import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
-import gantt from "dhtmlx-gantt";
-import { useProjects } from "../../context/ProjectContext";
+const initialTasks = [
+  {
+    name: "Setup repo",
+    start: "2025-09-22",
+    duration: "1 Hr",
+    barWidth: "15%",
+    barColor: "#f6b6b7",
+  },
+  {
+    name: "Setup DB",
+    start: "2025-09-22",
+    duration: "24 Hr",
+    barWidth: "50%",
+    barColor: "#c6f6fa",
+  },
+];
 
 const Timeline = () => {
-  const ganttContainer = useRef(null);
-  const { projects, addProject } = useProjects();
-  const [newProjectText, setNewProjectText] = useState("");
-  const [hover, setHover] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [isSmallMobile, setIsSmallMobile] = useState(window.innerWidth <= 480);
+  const [tasks, setTasks] = useState(initialTasks);
+  const [newTask, setNewTask] = useState("");
 
-  useEffect(() => {
-    gantt.config.xml_date = "%Y-%m-%d %H:%i";
-    gantt.config.readonly = false;
-    gantt.config.drag_move = true;
-    gantt.config.drag_resize = true;
-    gantt.config.drag_links = true;
-    gantt.config.auto_scheduling = true;
-    gantt.config.show_errors = false;
-    gantt.config.highlight_critical_path = true;
-
-    // Responsive Gantt configuration
-    gantt.config.scale_unit = windowWidth > 768 ? "month" : "week";
-    gantt.config.date_scale = windowWidth > 768 ? "%F, %Y" : "%M %d";
-    gantt.config.subscales = windowWidth > 768 ? [
-      { unit: "week", step: 1, date: "%j, %D" }
-    ] : [
-      { unit: "day", step: 1, date: "%d" }
-    ];
-
-    gantt.init(ganttContainer.current);
-
-    gantt.clearAll();
-    gantt.parse({
-      data: projects,
-      links: [
-        { id: 1, source: 1, target: 2, type: "0" },
-        { id: 2, source: 2, target: 3, type: "0" },
-        { id: 3, source: 3, target: 4, type: "0" },
-        { id: 4, source: 4, target: 5, type: "0" },
-      ],
-    });
-
-    // Re-render Gantt on window resize
-    gantt.render();
-  }, [projects, windowWidth]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setWindowWidth(width);
-      setIsMobile(width <= 768);
-      setIsSmallMobile(width <= 480);
-    };
-
-    window.addEventListener("resize", handleResize);
-    
-    // Cleanup function
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleCreateProject = () => {
-    if (!newProjectText.trim()) return;
-    const newProject = {
-      id: Date.now(),
-      text: newProjectText,
-      start_date: "2025-12-10 00:00",
-      duration: 10,
-      progress: 0,
-    };
-    addProject(newProject);
-    setNewProjectText("");
+  // Helper to format current date and time as "YYYY-MM-DD HH:mm:ss"
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleCreateProject();
+  const addTask = () => {
+    if (newTask.trim()) {
+      setTasks([
+        ...tasks,
+        {
+          name: newTask,
+          start: getCurrentDateTime(),
+          duration: "1 Hr",
+          barWidth: "15%",
+          barColor: "#f6b6b7",
+        },
+      ]);
+      setNewTask("");
     }
   };
 
-  // Responsive styles
-  const containerStyle = {
-    margin: isMobile ? "15px 10px" : "30px auto",
-    maxWidth: "1200px",
-    borderRadius: "16px",
-    boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-    overflow: "hidden",
-    background: "#D0F0F4",
-    fontFamily: "Segoe UI, sans-serif",
-    transform: "perspective(1000px)",
-    transition: "transform 0.3s ease-in-out",
-  };
-
-  const headerStyle = {
-    padding: isMobile ? "18px 15px" : "25px",
-    background: "linear-gradient(to right, #6a11cb, #2575fc)",
-    color: "#fff",
-    fontSize: isMobile ? "22px" : "28px",
-    fontWeight: "700",
-    textAlign: "center",
-    letterSpacing: "0.8px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-    textShadow: "1px 1px 2px rgba(0,0,0,0.2)",
-  };
-
-  const ganttStyle = {
-    height: isMobile ? (isSmallMobile ? "350px" : "400px") : "600px",
-    width: "100%",
-    borderTop: "1px solid #ccc",
-    overflow: "auto",
-  };
-
-  const inputContainerStyle = {
-    padding: isMobile ? "15px" : "20px",
-    display: "flex",
-    gap: "12px",
-    flexDirection: isSmallMobile ? "column" : "row",
-    alignItems: isSmallMobile ? "stretch" : "center",
-  };
-
-  const inputStyle = {
-    flex: "1",
-    padding: isMobile ? "10px 14px" : "12px 16px",
-    fontSize: isMobile ? "14px" : "16px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-    boxShadow: "inset 0 2px 4px rgba(0,0,0,0.1)",
-    transition: "all 0.3s ease",
-    outline: "none",
-    minWidth: "0",
-  };
-
-  const buttonStyle = {
-    padding: isMobile ? "10px 16px" : "12px 20px",
-    fontSize: isMobile ? "14px" : "16px",
-    borderRadius: "8px",
-    background: "#8c6deaff",
-    color: "#fff",
-    border: "none",
-    cursor: "pointer",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-    transition: "transform 0.2s ease, box-shadow 0.2s ease",
-    whiteSpace: "nowrap",
-    minWidth: isSmallMobile ? "100%" : "auto",
-  };
-
-  const buttonHoverStyle = {
-    transform: "scale(1.05)",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.3)",
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={headerStyle}>
-        {isMobile ? "📅 Timeline" : "📅 Project Timeline"}
+    <div
+      style={{
+        background: "#e5f6fb",
+        minHeight: "100vh",
+        fontFamily: "Inter, Arial, sans-serif",
+        margin: 0,
+        padding: 0,
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          background: "#a076f2",
+          color: "#fff",
+          padding: "24px 0 20px 0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "28px",
+          fontWeight: 600,
+          borderRadius: "8px 8px 0 0",
+        }}
+      >
+        <span style={{ marginRight: "12px", fontSize: "30px" }}>🗓️</span>
+        Project Timeline
       </div>
-      
-      <div style={inputContainerStyle}>
+      {/* Input Section */}
+      <div
+        style={{
+          padding: "20px",
+          display: "flex",
+          alignItems: "center",
+          gap: "18px",
+          background: "#fff",
+          borderRadius: "0 0 8px 8px",
+        }}
+      >
         <input
+          style={{
+            flex: 1,
+            fontSize: "22px",
+            padding: "9px 13px",
+            borderRadius: "7px",
+            border: "1.5px solid #cacaca",
+            outline: "none",
+            color: "#aaa",
+          }}
           type="text"
-          value={newProjectText}
-          onChange={(e) => setNewProjectText(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder={isMobile ? "New project..." : "Enter new project name..."}
-          style={inputStyle}
-          aria-label="New project name"
+          placeholder="New Task Name"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
         />
         <button
-          onClick={handleCreateProject}
-          style={hover ? { ...buttonStyle, ...buttonHoverStyle } : buttonStyle}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          aria-label="Add new project"
+          style={{
+            fontSize: "16px",
+            background: "#1976d2",
+            color: "#fff",
+            border: "none",
+            borderRadius: "7px",
+            padding: "9px 21px",
+            cursor: "pointer",
+            boxShadow: "0 1px 5px rgba(0,0,0,0.10)",
+            fontWeight: 500,
+          }}
+          onClick={addTask}
         >
-          {isMobile ? "➕ Add" : "➕ Add Project"}
+          Add Task
         </button>
       </div>
-      
-      <div 
-        ref={ganttContainer} 
-        style={ganttStyle}
-        className="gantt-container"
-      ></div>
+      {/* Timeline Table */}
+      <div
+        style={{
+          margin: "22px",
+          background: "#fff",
+          borderRadius: "9px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          overflow: "hidden",
+        }}
+      >
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "18px" }}>
+          <thead>
+            <tr>
+              <th
+                style={{
+                  background: "#fafafc",
+                  fontWeight: 600,
+                  padding: "11px 10px",
+                  borderBottom: "2px solid #ececec",
+                  textAlign: "left",
+                }}
+              >
+                Task name
+              </th>
+              <th
+                style={{
+                  background: "#fafafc",
+                  fontWeight: 600,
+                  padding: "11px 10px",
+                  borderBottom: "2px solid #ececec",
+                  textAlign: "left",
+                }}
+              >
+                Start time
+              </th>
+              <th
+                style={{
+                  background: "#fafafc",
+                  fontWeight: 600,
+                  padding: "11px 10px",
+                  borderBottom: "2px solid #ececec",
+                  textAlign: "left",
+                }}
+              >
+                Duration
+              </th>
+              <th
+                style={{
+                  background: "#fafafc",
+                  fontWeight: 600,
+                  padding: "11px 10px",
+                  borderBottom: "2px solid #ececec",
+                  textAlign: "left",
+                }}
+                colSpan={5}
+              >
+                <div style={{ display: "flex", gap: "6px" }}>
+                  <span>September 2025</span>
+                  <span style={{ marginLeft: "16px" }}>October 2025</span>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td
+                style={{
+                  background: "#f3f6fb",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  padding: "10px 10px",
+                  borderBottom: "2px solid #ececec",
+                  color: "#707793",
+                }}
+              >
+                1 Hr
+              </td>
+              <td
+                style={{
+                  background: "#f3f6fb",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  padding: "10px 10px",
+                  borderBottom: "2px solid #ececec",
+                  color: "#707793",
+                }}
+              >
+                12 Hr
+              </td>
+              <td
+                style={{
+                  background: "#f3f6fb",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  padding: "10px 10px",
+                  borderBottom: "2px solid #ececec",
+                  color: "#707793",
+                }}
+              >
+                24 hrs
+              </td>
+              <td
+                style={{
+                  background: "#f3f6fb",
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  padding: "10px 10px",
+                  borderBottom: "2px solid #ececec",
+                  color: "#707793",
+                }}
+              >
+                2 days
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks.map((task, idx) => (
+              <tr key={idx}>
+                <td
+                  style={{
+                    padding: "10px",
+                    borderBottom: "1px solid #f0f0f0",
+                    verticalAlign: "middle",
+                    fontSize: "16px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "15px",
+                      background: "#f6f7fa",
+                      border: "1.5px solid #bbb",
+                      borderRadius: "16px",
+                      padding: "2px 16px",
+                      fontWeight: 500,
+                      marginRight: "7px",
+                      marginBottom: "4px",
+                      display: "inline-block",
+                    }}
+                  >
+                    {task.name}
+                  </span>
+                </td>
+                <td
+                  style={{
+                    padding: "10px",
+                    borderBottom: "1px solid #f0f0f0",
+                    verticalAlign: "middle",
+                    fontSize: "16px",
+                  }}
+                >
+                  {task.start}
+                </td>
+                <td
+                  style={{
+                    padding: "10px",
+                    borderBottom: "1px solid #f0f0f0",
+                    verticalAlign: "middle",
+                    fontSize: "16px",
+                  }}
+                >
+                  {task.duration}
+                </td>
+                <td
+                  style={{
+                    position: "relative",
+                    minWidth: "500px",
+                    height: "60px",
+                    background: "#f9fbff",
+                  }}
+                  colSpan={4}
+                >
+                  <div
+                    style={{
+                      background: task.barColor,
+                      borderRadius: "8px",
+                      height: "23px",
+                      width: task.barWidth,
+                      position: "absolute",
+                      left: "3%",
+                      top: "15px",
+                      zIndex: 2,
+                      boxShadow: "0 2px 7px rgba(0,0,0,0.06)",
+                    }}
+                  ></div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
