@@ -1610,7 +1610,7 @@ function Layout() {
     },
     { path: '/assets', label: 'Assets', icon: <FiList /> },
     { path: '/timeline', label: 'Timeline', icon: <FiClock /> },
-        { path: '/users', label: 'Profile', icon: <FiUser /> },
+    { path: '/users', label: 'Profile', icon: <FiUser /> },
 
   ];
 

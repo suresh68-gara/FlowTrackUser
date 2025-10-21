@@ -1118,6 +1118,15 @@ const styles = {
     display: "inline-block",
     fontWeight: 500
   },
+  successMessage: {
+    color: "#276749",
+    background: "#c6f6d5",
+    padding: "8px 15px",
+    borderRadius: 8,
+    marginTop: 15,
+    display: "inline-block",
+    fontWeight: 500
+  },
   usersGrid: {
     display: "grid",
     gridTemplateColumns: "1fr",
@@ -1239,6 +1248,7 @@ export default function Users() {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [roles, setRoles] = useState(getStored(ROLES_KEY, defaultRoles));
   const [departments, setDepartments] = useState(getStored(DEPARTMENTS_KEY, defaultDepartments));
 
@@ -1267,11 +1277,14 @@ export default function Users() {
       ...prev,
       [name]: type === "checkbox" ? checked : type === "file" ? files[0] : value,
     }));
+    setError(null);
+    setSuccessMessage(null); // Clear success message on input change
   };
 
   const create = async () => {
     if (!newUserForm.firstName.trim() || !newUserForm.email.trim()) {
       setError("First Name and Email are required.");
+      setSuccessMessage(null);
       return;
     }
     try {
@@ -1288,8 +1301,10 @@ export default function Users() {
       setUsers(updatedUsers);
       setNewUserForm(defaultNewUser);
       setError(null);
+      setSuccessMessage("User added successfully!"); // Show success message
     } catch (err) {
       setError("Failed to add user");
+      setSuccessMessage(null);
     }
   };
 
@@ -1309,7 +1324,7 @@ export default function Users() {
           <div style={styles.cardHeader}>
             <h2 style={styles.cardTitle}>
               <span style={styles.iconSpacing}><FiUserPlus /></span>
-             Profile
+              Profile
             </h2>
           </div>
           <div style={formGridStyle}>
@@ -1388,28 +1403,21 @@ export default function Users() {
               </label>
             </div>
           </div>
+          {/* Submit Button added here */}
+          <button style={styles.createBtn} onClick={create}>
+            Submit
+          </button>
           {error && (
             <p style={styles.errorMessage}>{error}</p>
           )}
-
+          {successMessage && (
+            <p style={styles.successMessage}>{successMessage}</p>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-// 
 
 
