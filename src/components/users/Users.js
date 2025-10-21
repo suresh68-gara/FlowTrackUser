@@ -1042,7 +1042,7 @@
 
 
 
-// for update 21/10
+// for update 21/10 ok 
 
 
 
@@ -1052,8 +1052,10 @@ import { listUsers, addUser, updateUser, deleteUser } from "../../services/mockA
 import { v4 as uuidv4 } from "uuid";
 import { FiUserPlus } from "react-icons/fi";
 
+
 const ROLES_KEY = "user-management-roles";
 const DEPARTMENTS_KEY = "user-management-departments";
+
 
 const defaultRoles = [
   "Associate Developer",
@@ -1064,14 +1066,15 @@ const defaultRoles = [
 const defaultDepartments = [
   "Frontend",
   "Backend",
-  "Middleware",
-  "AIML",
+  "Marketing",
+  "AI/ML",
   "DevOps",
   "Testing",
   "FlowTrack",
   "NetWork",
   "Hr"
 ];
+
 
 function getStored(key, fallback) {
   const saved = localStorage.getItem(key);
@@ -1082,9 +1085,11 @@ function getStored(key, fallback) {
   }
 }
 
+
 function setStored(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
+
 
 // Inline style objects
 const styles = {
@@ -1231,6 +1236,7 @@ const styles = {
   }
 };
 
+
 export default function Users() {
   const defaultNewUser = {
     firstName: "",
@@ -1243,14 +1249,16 @@ export default function Users() {
     profileFile: null,
   };
 
+
   const [users, setUsers] = useState([]);
   const [newUserForm, setNewUserForm] = useState(defaultNewUser);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [roles, setRoles] = useState(getStored(ROLES_KEY, defaultRoles));
-  const [departments, setDepartments] = useState(getStored(DEPARTMENTS_KEY, defaultDepartments));
+  const [roles, setRoles] = useState(defaultRoles);
+  const [departments, setDepartments] = useState(defaultDepartments);
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -1264,12 +1272,14 @@ export default function Users() {
     fetchUsers();
   }, []);
 
+
   useEffect(() => {
     setStored(ROLES_KEY, roles);
   }, [roles]);
   useEffect(() => {
     setStored(DEPARTMENTS_KEY, departments);
   }, [departments]);
+
 
   const handleNewUserChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -1280,6 +1290,7 @@ export default function Users() {
     setError(null);
     setSuccessMessage(null); // Clear success message on input change
   };
+
 
   const create = async () => {
     if (!newUserForm.firstName.trim() || !newUserForm.email.trim()) {
@@ -1308,10 +1319,12 @@ export default function Users() {
     }
   };
 
+
   // Responsive fix for single-column on mobile
   const formGridStyle = window.innerWidth <= 1024
     ? { ...styles.formGrid, gridTemplateColumns: "1fr" }
     : styles.formGrid;
+
 
   return (
     <div style={styles.usersContainer}>
@@ -1418,6 +1431,7 @@ export default function Users() {
     </div>
   );
 }
+
 
 
 
